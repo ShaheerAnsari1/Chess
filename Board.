@@ -1,0 +1,535 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JComponent;
+
+
+/**
+ * @author Cian
+ * This class will draw our game board
+ */
+
+class Board extends JComponent implements MouseListener{
+        
+        public int gameBoard[][] = new int[8][8];	int a; int b;
+        public int row = 8;
+        public int column = 8;
+        public int cell = 80;
+        public int rowSelected;
+        public int colSelected;
+        public int currentPlayer;
+        
+        public Board(){
+                addMouseListener(this);
+                initialState();
+                currentPlayer = 1;
+        }
+        
+        public void paintComponent(Graphics g){
+                super.paintComponents(g);
+                Graphics2D g2d = (Graphics2D)g;
+                g2d.setColor(Color.WHITE);
+                g2d.fillRect(0, 0, 640, 640);
+                drawBoard(g2d);
+                drawPieces(g2d);
+        }
+        
+        public void drawBoard(Graphics2D g2d){
+                g2d.setColor(Color.black);
+                
+                // draw the edge lines (0,0,0,640), (0,0,640,0), (0,640,640,640), (640,0,640,640)
+                g2d.drawLine(0, 0, 0, 639);
+                g2d.drawLine(0, 0, 639, 0);
+                g2d.drawLine(0, 639, 639, 639);
+                g2d.drawLine(639, 0, 639, 639);
+                
+                // draw the horizontal lines using a loop from one to 7, coordiates of each line is (0, x*80, 640, x*80) also
+                // draw vertical lines with coordinates of (x*80, 0, x*80, 640)
+                for(int i = 1; i < 8; i++) {
+                        g2d.drawLine(0, i*80, 640, i*80);
+                        g2d.drawLine(i*80, 0, i*80, 640);
+                }
+
+                for ( int row = 0; row < 8; ++row )  // ++ means "increment by one" 
+                    // This inner loop counts over all the (white or black) squares in a row. It starts at 0 if row is even, or 1 if row is odd, and goes up to no more than 7 (so it will count 1-3-5-7 or 0-2-4-6 
+                    for ( int i = row % 2; i <= 7; i+= 2 ) {  // += means "add to that variable
+                            g2d.setColor(Color.BLACK);
+                        g2d.fillRect ( getX() + cell*i, getY() + row*cell, cell, cell); 
+                    } 
+        }
+        
+        public void drawPieces(Graphics2D g2d){
+            BufferedImage img_black = null;
+            BufferedImage castle_black = null;
+            BufferedImage castle_white = null;
+            BufferedImage img_white = null;
+            BufferedImage knight_black = null;
+            BufferedImage knight_white = null;
+            BufferedImage bishop_white = null;
+            BufferedImage bishop_black = null;
+            BufferedImage king_black = null;
+            BufferedImage king_white = null;
+            BufferedImage queen_black = null;
+            BufferedImage queen_white = null;
+            try {
+                img_black = ImageIO.read(new File("imgs/pawn-black.png"));
+                castle_black = ImageIO.read(new File("imgs/castle-black.png"));
+                castle_white = ImageIO.read(new File("imgs/castle-white.png"));
+                img_white = ImageIO.read(new File("imgs/pawn-white.png"));
+                knight_black = ImageIO.read(new File("imgs/knight-black.png"));
+                knight_white = ImageIO.read(new File("imgs/knight-white.png"));
+                bishop_black = ImageIO.read(new File("imgs/bishop-black.png"));
+                bishop_white = ImageIO.read(new File("imgs/white-bishop.png"));
+                king_black = ImageIO.read(new File("imgs/king-black.png"));
+                king_white = ImageIO.read(new File("imgs/king-white.png"));
+                queen_black = ImageIO.read(new File("imgs/queen-black.png"));
+                queen_white = ImageIO.read(new File("imgs/queen-white.png"));
+                    } catch (IOException e) {
+            }
+           
+            for(int a=0;a<8;a++){
+                    for(int b=0;b<8;b++){
+                            if(gameBoard[a][b] == 22){
+                                    g2d.drawImage(castle_black,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 12){
+                                    g2d.drawImage(castle_white,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 21){
+                                    g2d.drawImage(img_black,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 11){
+                                    g2d.drawImage(img_white,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 23){
+                                    g2d.drawImage(knight_black,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 13){
+                                    g2d.drawImage(knight_white,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 24){
+                                    g2d.drawImage(bishop_black,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 14){
+                                    g2d.drawImage(bishop_white,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 25){
+                                    g2d.drawImage(king_black,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 15){
+                                    g2d.drawImage(king_white,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 26){
+                                    g2d.drawImage(queen_black,a*80, b*80,null);
+                            }
+                            if(gameBoard[a][b] == 16){
+                                    g2d.drawImage(queen_white,a*80, b*80,null);
+                            }
+                    }
+                   
+            }
+    }
+        
+
+        @Override
+        public void mouseClicked(MouseEvent event) {
+                // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent arg0) {
+                // TODO Auto-generated method stub
+                
+        }
+
+        @Override
+        public void mouseExited(MouseEvent arg0) {
+                // TODO Auto-generated method stub
+                
+        }
+
+
+        public void mousePressed(MouseEvent event) {
+               int x = event.getX(); int y = event.getY();
+                rowSelected = x / cell;
+                colSelected = y / cell;
+                if(gameBoard[rowSelected][colSelected] == 0){System.out.println("Empty");}
+                if (rowSelected >= 0 && rowSelected < row && colSelected >= 0 && colSelected < column){
+                        System.out.println("X: "+rowSelected+" | Y: "+colSelected);
+                }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent event) {
+        	int	ab = event.getX();				//a = mouse released x coordinates
+        	int	bc = event.getY();				//b = mouse released y coordinates
+        		a = ab / cell;
+        		b = bc / cell;
+        		if (a >= 0 && a < row && b >= 0 && b < column){
+                    System.out.println("X: "+a+" | Y: "+b);
+        		}
+        		System.out.println(isValidMove(rowSelected,colSelected,a,b));
+        		attemptMove(rowSelected,colSelected,a,b,currentPlayer);
+    		}
+        
+        public void pawn(int x, int y, int a, int b){ //Takes in 2 coordinates
+        	if(currentPlayer == 1){
+        	gameBoard[x][y] = 0;
+        	gameBoard[a][b] = 11;
+        	}
+        	else{
+        	gameBoard[x][y] = 0;
+        	gameBoard[a][b] = 21;
+        	}
+        	repaint();
+        }
+        
+        public void castle(int x, int y, int a, int b){
+        	if(currentPlayer == 1){
+        		gameBoard[x][y] = 0;
+        		gameBoard[a][b] = 12;
+        	}
+        	else{
+        		gameBoard[x][y] = 0;
+        		gameBoard[a][b] = 22;
+    		}
+        	repaint();
+        }
+        
+        public void knight(int x, int y, int a, int b){        	
+        	if(currentPlayer == 1){
+        		gameBoard[x][y] = 0;
+        		gameBoard[a][b] = 13;
+        	}
+        	else{
+        		gameBoard[x][y] = 0;
+        		gameBoard[a][b] = 23;
+    		}
+        	repaint();
+        }
+        
+        public void bishop(int x, int y, int a, int b){
+        	if(currentPlayer == 1){
+        		gameBoard[x][y] = 0;
+        		gameBoard[a][b] = 14;
+        	}
+        	else{
+        		gameBoard[x][y] = 0;
+        		gameBoard[a][b] = 24;
+    		}
+        	repaint();
+        }
+        
+        public void queen(int x, int y, int a, int b){
+        	if(currentPlayer == 1){
+            	gameBoard[x][y] = 0;
+            	gameBoard[a][b] = 15;
+            	}
+        	else{
+        		gameBoard[x][y] = 0;
+        		gameBoard[a][b] = 25;
+        	}
+        	repaint();
+        }
+        
+        public void king(int x, int y, int a, int b){
+        	if(currentPlayer == 1){
+            	gameBoard[x][y] = 0;
+            	gameBoard[a][b] = 16;
+            	}
+        	else{
+        		gameBoard[x][y] = 0;
+        		gameBoard[a][b] = 26;
+        	}
+        	repaint();
+        }
+       
+        
+        //private functions
+        private void attemptMove(int x, int y, int a, int b, int player) {
+        	if(isValidMove(x,y,a,b) == true){
+        		int piece = gameBoard[x][y]%10;
+        		if(piece == 1){
+        			pawn(x,y,a,b);
+        		}
+        		else if(piece == 2){
+        			castle(x,y,a,b);
+        		}
+        		else if(piece == 3){
+        			knight(x,y,a,b);
+        		}
+        		else if(piece == 4){
+        			bishop(x,y,a,b);
+        		}
+        		else if(piece == 5){
+        			queen(x,y,a,b);
+        		}
+        		else if(piece == 6){
+        			king(x,y,a,b);
+        		}
+        		determineCheck();
+            	swapPlayers();
+        	}
+        }
+ 
+        private	boolean isValidMove(int x, int y, int a, int b){
+        	if(gameBoard[x][y]/10 == currentPlayer){
+        	int piece = gameBoard[x][y]%10;
+        	
+        		if(piece == 1){		//Pawn works
+        			if(currentPlayer == 1){
+        				if((x == a && y-1 == b && emptySpace(a,b) == true)
+        				|| (a == x+1 && b == y-1 && checkSpace(a,b) == 2)
+        				|| (a == x-1 && b == y-1 && checkSpace(a,b) == 2)){
+        					return true;
+        				}
+        				else return false;
+        			}
+        			if(currentPlayer == 2){
+        				if((x == a && y+1 == b && emptySpace(a,b) == true)
+        				|| (a == x+1 && b == y+1 && checkSpace(a,b) == 1)
+            			|| (a == x-1 && b == y+1 && checkSpace(a,b) == 1)){
+        					return true;
+        				}
+        				else return false;
+        			}
+        		}
+        		
+        		else if(piece == 2 && checkPath(x,y,a,b) == true){	//Castle works
+        			if(a == x || b == y){
+        				return true;
+        			}
+        			else return false;
+        		}
+        		
+        		else if(piece == 3 && checkSpace(a,b) != currentPlayer){	//Knight works
+        			if(a == x+1 && b == y+2 //Up 2 Right 1
+        			|| a == x-1 && b == y+2 //Up 2 Left 1
+        			|| a == x+2 && b == y+1 //Up 1 Right 2
+        			|| a == x-2 && b == y+1 //Up 1 Left 2
+        			|| a == x+2 && b == y-1 //Down 1 Right 2
+        			|| a == x-2 && b == y-1 //Down 1 Left 2
+        			|| a == x+1 && b == y-2 //Down 2 Right 1
+        			|| a == x-1 && b == y-2 //Down 2 Left 1
+        			){
+        				return true;
+        			}
+        			else return false;
+	        	}
+        		else if(piece == 4 && checkPath(x,y,a,b) == true){	//Bishop works
+        			if(a - x == b - y || a - x == -(b - y)){
+        				return true;
+        			}
+        			else return false;
+        		}
+        		
+        		else if(piece == 5 && checkPath(x,y,a,b) == true){	//Queen works
+        			if(a == x || b == y || a - x == b - y || a - x == -(b - y)){
+        				return true;
+        			}
+        			else return false;
+        		}
+        		
+        		else if(piece == 6 && checkSpace(a,b) != currentPlayer){	//King works
+        			if((a == x+1 && b == y)|| (a == x && b == y+1)
+        			|| (a == x-1 && y == b) || (a == x && b == y-1)
+        			|| (a == x+1 && b == y+1) || (a == x+1 && b == y-1)
+        			|| (a == x-1 && b == y-1) || (a == x-1 && b == y+1)){
+        				return true;
+        			}
+        			else return false;
+        		}
+        		else return false;
+        	}
+            return false;
+        }
+        
+        private boolean checkPath(int x, int y, int a, int b){
+        	int xdiff = x - a; int ydiff = y - b; boolean clear = false;
+        	if(xdiff == 0 && ydiff > 0){// Upward check
+        		if(ydiff == 1 && checkSpace(a,b) != currentPlayer){
+        			return clear = true;
+        		}
+        		else{
+        		y = y-1; 
+        		while(ydiff > 0 && y != b){
+        			if(gameBoard[x][y] == 0 && checkSpace(a,b) != currentPlayer){
+        				clear = true;
+        			}
+        			else return clear = false;
+        			ydiff--; y--;
+        		}
+        		}
+        	}
+        	
+        	if(xdiff == 0 && ydiff < 0){	//Downward check
+        		if(ydiff == -1 && checkSpace(a,b) != currentPlayer){
+        			return clear = true;
+        		}
+        		else{
+        		y = y+1;
+        		while(ydiff < 0 && y != b){
+        			if(gameBoard[x][y] == 0 && checkSpace(a,b) != currentPlayer){
+        				clear = true;
+        			}
+        			else return clear = false;
+        			ydiff++; y++;
+        		}
+        		}
+        	}
+        	
+        	if(xdiff > 0 && ydiff == 0){
+        		if(xdiff == 1 && checkSpace(a,b) != currentPlayer){
+        			return clear = true;
+        		}
+        		else{
+        		x = x-1;
+        		while(xdiff > 0 && x != a){
+        			if(gameBoard[x][y] == 0 && checkSpace(a,b) != currentPlayer){
+        				clear = true;
+        			}
+        			else return clear = false;
+        			xdiff--; x--;
+        		}
+        		}
+        	}
+        	
+        	if(xdiff < 0 && ydiff == 0){
+        		if(xdiff == -1 && checkSpace(a,b) != currentPlayer){
+        			return clear = true;
+        		}
+        		else{
+        		x = x+1;
+        		while(xdiff < 0 && x != a){
+        			if(gameBoard[x][y] == 0 && checkSpace(a,b) != currentPlayer){
+        				clear = true;
+        			}
+        			else return clear = false;
+        			xdiff++; x++;
+        		}
+        		}
+        	}
+        	
+        	if((xdiff > 0 && ydiff > 0) && (xdiff == ydiff)){
+        		if(xdiff == 1 && ydiff == 1 && checkSpace(a,b) != currentPlayer){
+        			return clear = true;
+        		}
+        		else{
+        		x=x-1; y=y-1;
+        		while(xdiff > 0 && ydiff > 0 && x != a && y != b){
+        			if(gameBoard[x][y] == 0 && checkSpace(a,b) != currentPlayer){
+        				clear = true;
+        			}
+        			else return clear = false;
+        			xdiff--; ydiff--; x--; y--;
+        		}
+        		}
+        	}
+        	
+        	if((xdiff < 0 && ydiff < 0) && (xdiff == ydiff)){
+        		if(xdiff == -1 && ydiff == -1 && checkSpace(a,b) != currentPlayer){
+        			return clear = true;
+        		}
+        		else{
+        		x=x+1; y=y+1;
+        		while(xdiff < 0 && ydiff < 0 && x != a && y != b){
+        			if(gameBoard[x][y] == 0 && checkSpace(a,b) != currentPlayer){
+        				clear = true;
+        			}
+        			else return clear = false;
+        			xdiff++; ydiff++; x++; y++;
+        		}
+        		}
+        	}
+        	
+        	if((xdiff > 0 && ydiff < 0) && (xdiff == (-ydiff))){
+        		if(xdiff == 1 && ydiff == -1 && checkSpace(a,b) != currentPlayer){
+        			return clear = true;
+        		}
+        		else{
+        		x=x-1; y=y+1;
+        		while(xdiff > 0 && ydiff < 0 && x != a && y != b){
+        			if(gameBoard[x][y] == 0 && checkSpace(a,b) != currentPlayer){
+        				clear = true;
+        			}
+        			else return clear = false;
+        			xdiff--; ydiff++; x--; y++;
+        		}
+        		}
+        	}
+        	
+        	if(xdiff < 0 && ydiff > 0 && ((-xdiff) == ydiff)){
+        		if(xdiff == -1 && ydiff == 1 && checkSpace(a,b) != currentPlayer){
+        			return clear = true;
+        		}
+        		else{
+        		x=x+1; y=y-1;
+        		while(xdiff < 0 && ydiff > 0 && x != a && y != b){
+        			if(gameBoard[x][y] == 0 && checkSpace(a,b) != currentPlayer){
+        				clear = true;
+        			}
+        			else return clear = false;
+        			xdiff++; ydiff--; x++; y--;
+        		}
+        		}
+        	}
+        	return clear;
+        }
+        
+        private boolean determineCheck(){
+            return false;
+        }
+        
+        public boolean emptySpace(int a, int b){
+        	if(gameBoard[a][b] == 0){
+        		return true;
+        	}
+        	else return false;
+        }
+        
+        public int checkSpace(int a, int b){
+        	if(gameBoard[a][b]/10 == 1){
+        		return 1;
+        	}
+        	else if(gameBoard[a][b]/10 == 2){
+        		return 2;
+        	}
+        	else return 0;
+        }
+        
+        private void swapPlayers() {
+    		if(currentPlayer == 1){	//If current player is 1. Make it player 2
+    			currentPlayer++;
+    		}
+    		else{
+    			currentPlayer = 1;	//Else make it player 1
+    		}
+    	}
+        
+        private void initialState() {
+        	gameBoard[0][0] = 22;	gameBoard[0][1] = 21;
+        	gameBoard[1][0] = 23;	gameBoard[1][1] = 21;
+        	gameBoard[2][0] = 24;	gameBoard[2][1] = 21;
+        	gameBoard[3][0] = 25;	gameBoard[3][1] = 21;
+        	gameBoard[4][0] = 26;	gameBoard[4][1] = 21;	//Black Pieces
+        	gameBoard[5][0] = 24;	gameBoard[5][1] = 21;
+        	gameBoard[6][0] = 23;	gameBoard[6][1] = 21;
+        	gameBoard[7][0] = 22;	gameBoard[7][1] = 21;
+        	
+        	gameBoard[0][7] = 12;	gameBoard[0][6] = 11;
+        	gameBoard[1][7] = 13;	gameBoard[1][6] = 11;
+        	gameBoard[2][7] = 14;	gameBoard[2][6] = 11;
+        	gameBoard[3][7] = 15;	gameBoard[3][6] = 11;	//White Pieces
+        	gameBoard[4][7] = 16;	gameBoard[4][6] = 11;
+        	gameBoard[5][7] = 14;	gameBoard[5][6] = 11;
+        	gameBoard[6][7] = 13;	gameBoard[6][6] = 11;
+        	gameBoard[7][7] = 12;	gameBoard[7][6] = 11;
+        }
+                 	      
+}
